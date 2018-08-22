@@ -2,46 +2,6 @@ var map;
 var marker;
 var markers = []
 
-var mapstyles = [
-  {
-    stylers: [
-        {
-            hue: "#dd0d0d"
-        }
-    ]
-},
-{
-    featureType: "road",
-    elementType: "labels",
-    stylers: [
-        {
-            visibility: "off"
-        }
-    ]
-},
-{
-    featureType: "road",
-    elementType: "geometry",
-    stylers: [
-        {
-            lightness: 100
-        },
-        {
-            visibility: "simplified"
-        }
-    ]
-},
-{
-  featureType: "transit",
-  elementType: "labels.icon",
-  stylers: [
-      {
-          visibility: "off"
-      }
-  ]
-},
-];
-
 function initMap() {
   // Constructor creates a new map - only center and zoom are required.
   map = new google.maps.Map(document.getElementById('map'), {
