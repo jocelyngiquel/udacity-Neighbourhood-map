@@ -1,3 +1,9 @@
+//Initialize google map, markers and infowindow
+//Retrieve the data from model to populate the markers location and title
+//Retrieve the data from model and fs to query the Foursquare API to retrieve
+//photo url, foursquare url of the place, rating and rating color.
+
+//Set global variable for the app
 var map;
 var marker;
 var markers = []
@@ -16,8 +22,9 @@ function initMap() {
   var infoWindow = new google.maps.InfoWindow();
   var bounds = new google.maps.LatLngBounds();
 
+  // The following group uses the location array to create an array of markers on initialize.
   for (var i = 0; i < locations.length; i++) {
-    // Get the position from the location array.
+    // Get the position and other details from the location array.
     var position = locations[i].location;
     var title = locations[i].title;
     var fsid = locations[i].fsid;
@@ -46,22 +53,30 @@ function initMap() {
   // Extend the boundaries of the map for each marker
   map.fitBounds(bounds);
 
+  // This function populates the infowindow when the marker is clicked. We'll only allow
+  // one infowindow which will open at the marker that is clicked, and populate based
+  // on that markers position and response from the Foursquare API.
   function populateInfoWindow(marker, infowindow) {
     // Check to make sure the infowindow is not already opened on this marker.
     if (infowindow.marker != marker) {
+      // Clear the infowindow content to give the streetview time to load.
       infowindow.setContent('');
       infowindow.marker = marker;
   
+      //Compute the Foursquare API request based on fs inputs and the marker fsid
       var fsURL = foursquare[0].url + marker.fsid + foursquare[0].clientID + foursquare[0].clientSecret + foursquare[0].version;
   
       $.ajax({
         url: fsURL,
         dataType: 'jsonp',
         success:function(result) {
+          //In case of request successful but quota exceeded, pass the error into the infowindow
           if (result.meta["code"] == 429) {
             render = '<div>' + '<p>' + 'Foursquare error: ' + result.meta["errorDetail"] + '</p>'+ '</div>';
             infowindow.setContent(window.render);
           } else {
+          //In case of request successful, parse the response and compute the
+          //infowindow
           var response = result.response;
           var shortURL = response.venue["shortUrl"];
               photoURL = response.venue.bestPhoto["prefix"] + "height150" + response.venue.bestPhoto["suffix"];
@@ -75,12 +90,14 @@ function initMap() {
                       '<img src="img/Foursquare_150.png">';          
               infowindow.setContent(window.render);
         }},
+        //In case of unsuccessful request, pass an error message
         error: function() {
           render = '<div>' + '<p>' + "Okay, houston, we've had a problem" + '</p>' + '</div>';
           infowindow.setContent(window.render);
         }
   
       });
+      // Open the infowindow on the correct marker.
       infowindow.open(map, marker);
       // Make sure the marker property is cleared if the infowindow is closed.
       infowindow.addListener('closeclick',function(){
@@ -92,6 +109,6 @@ function initMap() {
       });
     }
   }
+  // Apply Knockout.js bindings
   ko.applyBindings(vm);
-
 }

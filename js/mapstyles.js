@@ -1,3 +1,5 @@
+//Snazzy map style
+//https://snazzymaps.com/style/26787/dropoff-3
 var mapstyles = [
     {
         "featureType": "administrative.locality",

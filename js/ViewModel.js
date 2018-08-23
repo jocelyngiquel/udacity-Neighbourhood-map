@@ -11,7 +11,6 @@ var ViewModel = function() {
     self.locationList = ko.observableArray([]);
   
     // Push all locations to an array - locationList
-  
     locations.forEach(function(locationItem) {
       self.locationList.push(new Location(locationItem));
     });

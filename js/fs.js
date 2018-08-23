@@ -1,3 +1,4 @@
+//Variable storing all foursquare details for api request
 var foursquare = [
     {
         url: "https://api.foursquare.com/v2/venues/",

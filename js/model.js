@@ -1,3 +1,4 @@
+//Variable with locations details (name and position) as well as foursquare ID
 var  locations = [
     {
       title: "Tavolone Bains",
