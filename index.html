@@ -25,7 +25,9 @@
       </div>
       <div class="selector-menu">
         <h3>Any place in mind you would like to try?</h3>
-        <ul data-bind ="foreach: locationList">
+        <input id="filter" class="filter" type="text" placeholder="Search locations..." data-bind="textInput: searchItem, valueUpdate: 'afterkeydown'">
+        <button data-bind='click: clearFilter'>Clear</button>
+        <ul data-bind ="foreach: locationFiltered">
           <li class="model-item" data-bind="text: title, click: $parent.openWindow">
           </li>
         </ul>
@@ -41,8 +43,8 @@
     <script src="js/mapstyles.js"></script>
     <script src="js/model.js"></script>
     <script src="js/fs.js"></script>
-    <script src="js/map.js"></script>
     <script src="js/ViewModel.js"></script>
+    <script src="js/map.js"></script>
     <script src="js/togglenavbar.js"></script>
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBaQ-xUYE791NKlqTJloTCNwlNsKjPhmRc&v=3&callback=initMap">
