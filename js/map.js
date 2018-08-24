@@ -41,15 +41,26 @@ function initMap() {
     });
     // Push the marker to our array of markers.
     markers.push(marker);
+
+    bounds.extend(marker.position);
+    vm.locationList()[i].marker = marker
+
     // Create an onclick event to open an infowindow at each marker.
     marker.addListener('click', function() {
+      toggleBounce(this);
       map.panTo(marker.getPosition());
       map.panBy(0, -200);
       populateInfoWindow(this, infoWindow);
     });
-    bounds.extend(marker.position);
-    vm.locationList()[i].marker = marker;
-  }
+
+    //function to add bounce animation to the clicked marker
+    function toggleBounce(marker) {
+      marker.setAnimation(google.maps.Animation.BOUNCE);
+      setTimeout(function() {
+        marker.setAnimation(null)
+      }, 1500);
+    }
+
   // Extend the boundaries of the map for each marker
   map.fitBounds(bounds);
 
@@ -108,6 +119,7 @@ function initMap() {
       infowindow.close(infowindow);
       });
     }
+  }
   }
   // Apply Knockout.js bindings
   ko.applyBindings(vm);
