@@ -3,10 +3,12 @@
 //Retrieve the data from model and fs to query the Foursquare API to retrieve
 //photo url, foursquare url of the place, rating and rating color.
 
+"use strict";
+
 //Set global variable for the app
 var map;
 var marker;
-var markers = []
+var markers = [];
 
 function initMap() {
   // Constructor creates a new map - only center and zoom are required.
@@ -43,7 +45,7 @@ function initMap() {
     markers.push(marker);
 
     bounds.extend(marker.position);
-    vm.locationList()[i].marker = marker
+    vm.locationList()[i].marker = marker;
 
     // Create an onclick event to open an infowindow at each marker.
     marker.addListener('click', function() {
@@ -57,7 +59,7 @@ function initMap() {
     function toggleBounce(marker) {
       marker.setAnimation(google.maps.Animation.BOUNCE);
       setTimeout(function() {
-        marker.setAnimation(null)
+        marker.setAnimation(null);
       }, 1500);
     }
 
@@ -75,36 +77,36 @@ function initMap() {
       infowindow.marker = marker;
   
       //Compute the Foursquare API request based on fs inputs and the marker fsid
-      var fsURL = foursquare[0].url + marker.fsid + foursquare[0].clientID + foursquare[0].clientSecret + foursquare[0].version;
+      var fsURL = foursquare.url + marker.fsid + foursquare.clientID + foursquare.clientSecret + foursquare.version;
   
       $.ajax({
         url: fsURL,
         dataType: 'jsonp',
         success:function(result) {
           //In case of request successful but quota exceeded, pass the error into the infowindow
-          if (result.meta["code"] == 429) {
-            render = '<div>' + '<p>' + 'Foursquare error: ' + result.meta["errorDetail"] + '</p>'+ '</div>';
-            infowindow.setContent(window.render);
+          if (result.meta.code == 429) {
+            var quotaRender = '<div>' + '<p>' + 'Foursquare error: ' + result.meta.errorDetail + '</p>'+ '</div>';
+            infowindow.setContent(quotaRender);
           } else {
           //In case of request successful, parse the response and compute the
           //infowindow
           var response = result.response;
-          var shortURL = response.venue["shortUrl"];
-              photoURL = response.venue.bestPhoto["prefix"] + "height150" + response.venue.bestPhoto["suffix"];
-              rating = response.venue["rating"];
-              ratingColor = response.venue["ratingColor"];
-              render = '<div style = "text-align: center;">'+ '<b>' + marker.title + '</b>' +
+          var shortURL = response.venue.shortUrl;
+          var photoURL = response.venue.bestPhoto.prefix + "height150" + response.venue.bestPhoto.suffix;
+          var rating = response.venue.rating;
+          var ratingColor = response.venue.ratingColor;
+          var successRender = '<div style = "text-align: center;">'+ '<b>' + marker.title + '</b>' +
                       '<div>' + 'Rating:  ' + '<b style = "font-size:20px; color:#' + ratingColor + '">' +
                       rating + '</b>' + '</div>'+
                       '<img src="' +photoURL +'"><br>'+
                       '<a href ="'+ shortURL +'">'+ 'More info on Foursquare</a>' + '</div>' +
                       '<img src="img/Foursquare_150.png">';          
-              infowindow.setContent(window.render);
+              infowindow.setContent(successRender);
         }},
         //In case of unsuccessful request, pass an error message
         error: function() {
-          render = '<div>' + '<p>' + "Okay, houston, we've had a problem" + '</p>' + '</div>';
-          infowindow.setContent(window.render);
+          var errorRender = '<div>' + '<p>' + "Okay, houston, we've had a problem" + '</p>' + '</div>';
+          infowindow.setContent(errorRender);
         }
   
       });
@@ -123,4 +125,14 @@ function initMap() {
   }
   // Apply Knockout.js bindings
   ko.applyBindings(vm);
+}
+
+//Error handling function for google map API issues
+function googleError() {
+  var errorMsg = "Okay, houston, we've had a problem! There is an issue with Google map";
+
+  var mapDiv = document.getElementById('map');
+  var errorDiv = document.createElement('p');
+  errorDiv.innerHTML = errorMsg;
+  mapDiv.appendChild(errorDiv);
 }

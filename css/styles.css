@@ -18,7 +18,7 @@ h4 {
   margin-bottom: 10px;
 }
 
-#map {
+.map-container {
   height: 100%;
 }
 

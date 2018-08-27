@@ -1,4 +1,6 @@
 // View Model - data control and storage
+"use strict";
+
 var ViewModel = function() {
   var self = this;
 
@@ -6,7 +8,6 @@ var ViewModel = function() {
   var Location = function(data) {
     this.title = data.title;
     this.marker = data.marker;
-    this.visible = ko.observable(true);
   };
 
   self.locationList = ko.observableArray([]);
@@ -29,11 +30,13 @@ var ViewModel = function() {
     });
     }
     self.locationList().forEach(function(location) {
-        location.visible(true);
+      if(location.marker) {
+        location.marker.setVisible(true);
+      }
     });
     return self.locationList();
     
-  }, self);
+  });
 
   //Reset the marker display on map
   self.clearFilter = function() {

@@ -15,7 +15,7 @@
 
   <body>
     <!--Google map ccontainer-->
-    <div id="map"></div>
+    <div id="map" class="map-container"></div>
     <!--navbar icon ccontainer-->
     <img class="navbar-menu" src="img/menu.png" alt="hamburger menu icon">
     <!--Side menu ccontainer-->
@@ -47,7 +47,7 @@
     <script src="js/map.js"></script>
     <script src="js/togglenavbar.js"></script>
     <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBaQ-xUYE791NKlqTJloTCNwlNsKjPhmRc&v=3&callback=initMap">
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBaQ-xUYE791NKlqTJloTCNwlNsKjPhmRc&v=3&callback=initMap" onerror="googleError()">
     </script>
   </body>
 </html>
